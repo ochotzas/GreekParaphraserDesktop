@@ -25,11 +25,13 @@ The `.ptf` file is a simple text file that contains the text to paraphrase and i
 ## Screenshots
 
 ### Loading Screen
-![](https://raw.githubusercontent.com/ochotzas/GreekParaphraserDesktop/main/screenshots/loading_screen.png)
+<img src="https://raw.githubusercontent.com/ochotzas/GreekParaphraserDesktop/main/screenshots/loading_screen.png" width="600">
+
 ### Main Screen
-![](https://raw.githubusercontent.com/ochotzas/GreekParaphraserDesktop/main/screenshots/main_screen_on_action.png)
+<img src="https://raw.githubusercontent.com/ochotzas/GreekParaphraserDesktop/main/screenshots/main_screen_on_action.png" width="600">
+
 ### File load
-![](https://raw.githubusercontent.com/ochotzas/GreekParaphraserDesktop/main/screenshots/file_load.png)
+<img src="https://raw.githubusercontent.com/ochotzas/GreekParaphraserDesktop/main/screenshots/file_load.png" width="600">
 
 ## Contributing
 
