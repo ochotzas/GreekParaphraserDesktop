@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="GreekParaphraser:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/GreekParaphraser_jar</output-path>
+    <root id="root">
+      <element id="module-output" name="GreekParaphraser" />
+    </root>
+  </artifact>
+</component>
