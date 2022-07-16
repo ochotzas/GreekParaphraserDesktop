@@ -1,8 +1,7 @@
 package Design;
-
 import Actions.ActionRequest;
+import Enums.Action;
 import Enums.Mode;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -125,18 +124,25 @@ public class HomeWindow extends JDialog
         {
             try
             {
+                String processedText = "";
                 isParaphrasing = true;
                 String text = userTextPanel.getText();
-                if (Enums.Action.PARAPHRASE.equals(action))
+                if (Action.PARAPHRASE.equals(action))
+                    processedText = ActionRequest.paraphrase(text);
+                else if (Action.CORRECT.equals(action))
+                    processedText = ActionRequest.correct(text);
+
+                switch (ActionRequest.getStatusCode())
                 {
-                    String paraphrasedText = ActionRequest.paraphrase(text);
-                    paraphrasedTextPanel.setText(paraphrasedText);
-                    helpMessage.setText(ActionRequest.getStatusCode() == 200 ? "Το κείμενο σας παραφράστηκε με επιτυχία" : "Κάτι πήγε στραβά");
-                } else if (Enums.Action.CORRECT.equals(action))
-                {
-                    String correctedText = ActionRequest.correct(text);
-                    paraphrasedTextPanel.setText(correctedText);
-                    helpMessage.setText(ActionRequest.getStatusCode() == 200 ? "Το κείμενο σας διορθώθηκε με επιτυχία" : "Κάτι πήγε στραβά");
+                    case 200 ->
+                    {
+                        helpMessage.setText("H " + (action == Action.PARAPHRASE ? "παράφραση": "διόρθωση") + " ήταν επιτυχής");
+                        paraphrasedTextPanel.setText(processedText);
+                    }
+                    case 400 -> helpMessage.setText("Γενικό σφάλμα");
+                    case 404 -> helpMessage.setText("Το κλειδί δεν βρέθηκε (Σφάλμα προγραμματιστή: API - key Not Found)");
+                    case 429 -> helpMessage.setText("Εσφαλμένα στοιχεία (Σφάλμα προγραμματιστή: Wrong API credentials)");
+                    default -> helpMessage.setText("Κάτι πήγε στραβά, το πρόβλημα δεν μπόρεσε να εντοπιστεί");
                 }
             } catch (IOException | InterruptedException ex)
             {

@@ -3,13 +3,15 @@ package Actions;
 import Enums.ApiAction;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class ActionRequest
 {
@@ -173,14 +175,25 @@ public class ActionRequest
     private static String getApiKey(ApiAction action)
     {
         String apiKey = null;
+        String filePath = ".env/.env." + action.toString().toLowerCase();
 
         try
         {
-            File file = action == ApiAction.PARAPHRASE ? new File(".env/.env.paraphrase") : new File(".env/.env.translate");
-            apiKey = new Scanner(file).nextLine();
-        } catch (FileNotFoundException e)
+            if (!new File(filePath).exists())
+            {
+                new File(filePath).createNewFile();
+                FileWriter fw = new FileWriter(filePath);
+                fw.write(String.valueOf(UUID.randomUUID()));
+                fw.close();
+            }
+
+            apiKey = new Scanner(new File(filePath)).nextLine();
+        } catch (IOException e)
         {
-            statusCode = 400;
+            if (e.getCause() instanceof NoSuchElementException)
+                statusCode = 404;
+            else
+                statusCode = 400;
         }
 
         return apiKey;
