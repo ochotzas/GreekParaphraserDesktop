@@ -9,7 +9,7 @@ Greek Paraphrase(r) is a project that aims to provide a simple, easy-to-use, and
 - Save a text for later use (Supported file formats: `.ptf` - Check below for further information).
 - Open a saved text (Supported file formats: `.ptf` - Check below for further information).
 
-### File format support
+## File format support
 
 `.ptf`: Paraphrase Text File
 
