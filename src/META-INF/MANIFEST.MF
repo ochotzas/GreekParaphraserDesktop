@@ -1,2 +1,2 @@
-Manifest-Version: 1.0
+Manifest-Version: v0.0.3-alpha
 Main-Class: Executable.Run

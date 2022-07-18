@@ -47,9 +47,11 @@ If you have any questions or comments, please open an issue on [Issues](https://
 
 ## Changelog
 
+- v0.0.3-alpha:
+  * Add the action icon that is selected on the left-down corner of the main window.
 - v0.0.2-alpha:
-    * Show a related message regarding the files that contain the API keys.
-    * Create a drop-down  action menu and adjust some components.
+  * Show a related message regarding the files that contain the API keys.
+  * Create a drop-down action menu and adjust some components.
 - v0.0.1-alpha:
   * Initial release.
 
@@ -61,7 +63,7 @@ This project is licensed under the general terms of the MIT license.
 
 ## Version
 
-Version: 0.0.2-alpha
+Version: 0.0.3-alpha
 
 ## Contributors
 
