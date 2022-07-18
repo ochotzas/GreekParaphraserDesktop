@@ -7,6 +7,8 @@ import Enums.State;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -40,6 +42,7 @@ public class HomeWindow extends JDialog
     JComboBox actionSelector;
     JLabel processState;
     JLabel actionMessage;
+    JLabel iconAction;
     private boolean isParaphrasing;
 
     public HomeWindow()
@@ -47,6 +50,7 @@ public class HomeWindow extends JDialog
         setIconImage(new ImageIcon("icons/comment.png").getImage());
         setTitle("Παραφραστής Ελληνικών κειμένων");
 
+        allListenersAndInitialisations();
         setResizable(false);
         loadingScreen();
         menu();
@@ -54,6 +58,13 @@ public class HomeWindow extends JDialog
         setContentPane(contentPane);
         isParaphrasing = false;
         setModal(true);
+
+    }
+
+    public void allListenersAndInitialisations()
+    {
+        iconAction.setIcon(new ImageIcon("icons/rocket-lunch.png"));
+        iconAction.setToolTipText("Επιλεγμένη ενέργεια παράφρασης");
 
         // when ctl+z is pressed, undo the last action
         userTextPanel.addKeyListener(new KeyAdapter()
@@ -127,6 +138,27 @@ public class HomeWindow extends JDialog
         Components.JLabelDesign(actionMessage);
         Components.JLabelDesign(writtenCharsMsg);
         Components.JMenuBarDesign(menuBar);
+
+        actionSelector.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                switch (Objects.requireNonNull(actionSelector.getSelectedItem()).toString())
+                {
+                    case "Παράφραση" ->
+                    {
+                        iconAction.setIcon(new ImageIcon("icons/rocket-lunch.png"));
+                        iconAction.setToolTipText("Επιλεγμένη ενέργεια παράφρασης");
+                    }
+                    case "Διόρθωση" ->
+                    {
+                        iconAction.setIcon(new ImageIcon("icons/bolt.png"));
+                        iconAction.setToolTipText("Επιλεγμένη ενέργεια διόρθωσης");
+                    }
+                }
+            }
+        });
     }
 
     /**
