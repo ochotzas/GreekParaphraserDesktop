@@ -19,7 +19,7 @@ import static Actions.ActionRequest.paraphrase;
 
 public class HomeWindow extends JDialog
 {
-    final Mode mode = Mode.USER; // change this to {"Mode.DEVELOPER"} to skip loading screen
+    final Mode mode = Mode.DEVELOPER; // change this to {"Mode.DEVELOPER"} to skip loading screen
     final int charLimit = 1000;
     JPanel mainPanel;
     JLabel helpMessage;
