@@ -22,10 +22,18 @@ The `.ptf` file is a simple text file that contains the text to paraphrase and i
 <paraphrased_text>
 ```
 
-## Screenshots
+## How to set up Greek Paraphrase(r)
 
-### Loading Screen
-<img src="https://raw.githubusercontent.com/ochotzas/GreekParaphraserDesktop/main/screenshots/loading_screen.png" width="600">
+Just clone the repository and edit the .env files to set your API keys (e.g. you might get your own key for the apps which you want to use [here](https://rapidapi.com/hub)).
+
+.env files must be written in UTF-8 encoding, without enter (\n) and must be inline with the following format:
+
+```
+<your_key><EOF>
+```
+
+
+## Screenshots
 
 ### Main Screen
 <img src="https://raw.githubusercontent.com/ochotzas/GreekParaphraserDesktop/main/screenshots/main_screen_on_action.png" width="600">
