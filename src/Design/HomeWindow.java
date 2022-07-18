@@ -2,6 +2,8 @@ package Design;
 import Actions.ActionRequest;
 import Enums.Action;
 import Enums.Mode;
+import Enums.State;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -10,10 +12,10 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Base64;
-import java.util.EmptyStackException;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
+
+import static Actions.ActionRequest.correct;
+import static Actions.ActionRequest.paraphrase;
 
 public class HomeWindow extends JDialog
 {
@@ -33,6 +35,11 @@ public class HomeWindow extends JDialog
     private JTextPane userTextPanel;
     private JTextPane paraphrasedTextPanel;
     private JButton paraphraseBtn;
+    JPanel JPanelTextHolder;
+    JPanel JPanelProcessedTextHolder;
+    JComboBox actionSelector;
+    JLabel processState;
+    JLabel actionMessage;
     private boolean isParaphrasing;
 
     public HomeWindow()
@@ -64,7 +71,7 @@ public class HomeWindow extends JDialog
         charLimitHandler();
         helpMessage.setText("Πατήστε το κουμπί για παράφραση");
         writtenCharsMsg.setText("Χαρακτήρες " + userTextPanel.getText().length() + " / " + charLimit);
-        writtenCharsMsg.setIcon(new ImageIcon("icons/hashtag.png"));
+        writtenCharsMsg.setIcon(new ImageIcon("icons/feather.png"));
 
         paraphraseBtn.setEnabled(!userTextPanel.getText().isEmpty() && paraphrasedTextPanel.getText().isEmpty());
         paraphrase.setEnabled(!userTextPanel.getText().isEmpty() && paraphrasedTextPanel.getText().isEmpty());
@@ -72,7 +79,14 @@ public class HomeWindow extends JDialog
         save.setEnabled(!userTextPanel.getText().isEmpty() && paraphrasedTextPanel.getText().isEmpty());
         clear.setEnabled(!userTextPanel.getText().isEmpty() || !paraphrasedTextPanel.getText().isEmpty());
 
-        paraphraseBtn.addActionListener(e -> onClickAction(Enums.Action.PARAPHRASE));
+        paraphraseBtn.addActionListener(e ->
+        {
+            switch (Objects.requireNonNull(actionSelector.getSelectedItem()).toString())
+            {
+                case "Παράφραση" -> onClickAction(Action.PARAPHRASE);
+                case "Διόρθωση" -> onClickAction(Action.CORRECT);
+            }
+        });
 
         // When any key is pressed, check if the user has reached the character limit.
         userTextPanel.addKeyListener(new KeyAdapter()
@@ -88,6 +102,7 @@ public class HomeWindow extends JDialog
                 save.setEnabled(!userTextPanel.getText().isEmpty());
                 clear.setEnabled(userTextPanel.getText().isEmpty() || paraphrasedTextPanel.getText().isEmpty());
                 helpMessage.setText("Πατήστε το κουμπί για παράφραση");
+                StateHandler.setState(processState, State.NEUTRAL);
                 historyStack.push(userTextPanel.getText());
             }
         });
@@ -102,6 +117,16 @@ public class HomeWindow extends JDialog
             }
         });
 
+        Components.JTextPaneDesign(userTextPanel);
+        Components.JTextPaneDesign(paraphrasedTextPanel);
+        Components.JButtonDesign(paraphraseBtn);
+        Components.JPanelDesign(JPanelTextHolder);
+        Components.JPanelDesign(JPanelProcessedTextHolder);
+        Components.JPanelDesign(mainPanel);
+        Components.JLabelDesign(helpMessage);
+        Components.JLabelDesign(actionMessage);
+        Components.JLabelDesign(writtenCharsMsg);
+        Components.JMenuBarDesign(menuBar);
     }
 
     /**
@@ -128,21 +153,38 @@ public class HomeWindow extends JDialog
                 isParaphrasing = true;
                 String text = userTextPanel.getText();
                 if (Action.PARAPHRASE.equals(action))
-                    processedText = ActionRequest.paraphrase(text);
+                    processedText = paraphrase(text);
                 else if (Action.CORRECT.equals(action))
-                    processedText = ActionRequest.correct(text);
+                    processedText = correct(text);
 
                 switch (ActionRequest.getStatusCode())
                 {
                     case 200 ->
                     {
                         helpMessage.setText("H " + (action == Action.PARAPHRASE ? "παράφραση": "διόρθωση") + " ήταν επιτυχής");
+                        StateHandler.setState(processState, State.SUCCESS);
                         paraphrasedTextPanel.setText(processedText);
                     }
-                    case 400 -> helpMessage.setText("Γενικό σφάλμα");
-                    case 404 -> helpMessage.setText("Το κλειδί δεν βρέθηκε (Σφάλμα προγραμματιστή: API - key Not Found)");
-                    case 429 -> helpMessage.setText("Εσφαλμένα στοιχεία (Σφάλμα προγραμματιστή: Wrong API credentials)");
-                    default -> helpMessage.setText("Κάτι πήγε στραβά, το πρόβλημα δεν μπόρεσε να εντοπιστεί");
+                    case 400 ->
+                    {
+                        helpMessage.setText("Γενικό σφάλμα");
+                        StateHandler.setState(processState, State.FAILURE);
+                    }
+                    case 404 ->
+                    {
+                        helpMessage.setText("Το κλειδί δεν βρέθηκε (Σφάλμα προγραμματιστή: API - key Not Found)");
+                        StateHandler.setState(processState, State.INFO);
+                    }
+                    case 429 ->
+                    {
+                        helpMessage.setText("Εσφαλμένα στοιχεία (Σφάλμα προγραμματιστή: Wrong API credentials)");
+                        StateHandler.setState(processState, State.WARNING);
+                    }
+                    default ->
+                    {
+                        helpMessage.setText("Κάτι πήγε στραβά, το πρόβλημα δεν μπόρεσε να εντοπιστεί");
+                        StateHandler.setState(processState, State.FAILURE);
+                    }
                 }
             } catch (IOException | InterruptedException ex)
             {
@@ -189,10 +231,10 @@ public class HomeWindow extends JDialog
         load.addActionListener(e -> onClickLoad());
         clear.addActionListener(e -> onClickClear());
 
-        paraphrase.setIcon(new ImageIcon("icons/magic-wand.png"));
-        correct.setIcon(new ImageIcon("icons/pencil.png"));
-        save.setIcon(new ImageIcon("icons/disk.png"));
-        load.setIcon(new ImageIcon("icons/search-alt.png"));
+        paraphrase.setIcon(new ImageIcon("icons/rocket-lunch.png"));
+        correct.setIcon(new ImageIcon("icons/bolt.png"));
+        save.setIcon(new ImageIcon("icons/folder-download.png"));
+        load.setIcon(new ImageIcon("icons/folder.png"));
         clear.setIcon(new ImageIcon("icons/trash.png"));
 
         file.add(load);
@@ -204,6 +246,8 @@ public class HomeWindow extends JDialog
         paraphrase.setEnabled(false);
         correct.setEnabled(false);
         save.setEnabled(false);
+
+        Components.JMenuDesign(menuBar);
 
         menuBar.add(file);
         menuBar.add(actions);
@@ -417,4 +461,5 @@ public class HomeWindow extends JDialog
                 userTextPanel.setText(historyStack.pop());
         } catch (EmptyStackException ignored) {}
     }
+
 }
