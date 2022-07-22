@@ -199,7 +199,7 @@ public class HomeWindow extends JDialog
                     }
                     case 400 ->
                     {
-                        helpMessage.setText("Γενικό σφάλμα");
+                        helpMessage.setText("Αδυναμία ανάλυσης σφάλματος");
                         StateHandler.setState(processState, State.FAILURE);
                     }
                     case 404 ->
@@ -220,8 +220,8 @@ public class HomeWindow extends JDialog
                 }
             } catch (IOException | InterruptedException ex)
             {
-                helpMessage.setText("Υπήρξε κάποιο πρόβλημα κατά την διόρθωση του κειμένου");
-                throw new RuntimeException(ex);
+                helpMessage.setText("Αδυναμία εκτέλεσης ενέργειας, ελέγξτε την σύνδεση σας στο διαδίκτυο");
+                StateHandler.setState(processState, State.INFO);
             } finally
             {
                 save.setEnabled(true);
