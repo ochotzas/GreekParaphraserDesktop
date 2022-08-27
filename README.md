@@ -46,7 +46,8 @@ Just clone the repository and edit the .env files to set your API keys (e.g. you
 If you have any questions or comments, please open an issue on [Issues](https://github.com/ochotzas/GreekParaphraserDesktop/issues).
 
 ## Changelog
-
+- v0.0.4-alpha:
+  * Modify errors print values.
 - v0.0.3-alpha:
   * Add the action icon that is selected on the left-down corner of the main window.
 - v0.0.2-alpha:
@@ -63,7 +64,7 @@ This project is licensed under the general terms of the MIT license.
 
 ## Version
 
-Version: 0.0.3-alpha
+Version: 0.0.4-alpha
 
 ## Contributors
 
